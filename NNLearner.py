@@ -6,6 +6,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+import time
 
 class NNLearner(object):
     def __init__(self, learning_rate = .001,\
@@ -102,9 +104,9 @@ class NNLearner(object):
                 W[i] = W[i] - self.learning_rate * dCdW[i]
                 b[i] = b[i] - self.learning_rate * dCdb[i]   
             
-#            if self.verbose:
-#                if t % 100000 == 0:
-#                    print "cost at time {}, is {}, learning_rate is {}".format(t, self.calculate_cost(A[len(A)-1], Y), self.learning_rate)
+            if t % 100 == 0:
+                print("cost at time {}, is {}, learning_rate is {}"
+                      .format(t, self.calculate_cost(A[len(A)-1], Y), self.learning_rate))
         self.W = W
         self.b = b
         
@@ -120,8 +122,39 @@ class NNLearner(object):
         return a.T
 
 if __name__=="__main__":
+    seed = np.random.seed(56)
+    n_samples = 500
+    n_features = 2
+    centers = 2
+    cluster_std = 3.5
+    data = make_blobs(n_samples, n_features, centers, cluster_std)
+    plt.figure(1)
+    plt.scatter(data[0][:,0], data[0][:,1], c=data[1])
     
-    pass
+    X_train, X_test, y_train, y_test = train_test_split(data[0], data[1], test_size=0.33)
+    plt.figure(2)
+    plt.scatter(X_train[:,0], X_train[:,1], c=y_train)
+    
+    
+    learning_rate = .001
+    num_iterations = 10000
+    num_neurons = [6,6]
+    num_neurons = []
+    batch_size = 20
+    
+    st = time.time()
+    nnl = NNLearner(learning_rate = learning_rate, 
+                     num_iterations = num_iterations, 
+                     num_neurons = num_neurons, 
+                     batch_size = batch_size, 
+                     verbose = True)
+    
+    nnl.addEvidence(X_train, y_train)
+    print("training took: {} ms".format(time.time() - st))
+    prediction = nnl.query(X_train)
+#    for i in range(prediction.shape[0]):
+#        print(prediction[i,:], y_train[i])
+        
 #    train_X = np.array([[-3,-1,2,3,0,0,1,1,-4,3,-2,-1,2,0],
 #                        [0,1,2,3,1,1,4,4,2,4,3,3,4,0]]).T
 #    train_Y = np.array([[0,0,0,0,0,0,0,1,1,1,1,1,1,1]]).T
