@@ -11,7 +11,7 @@ import time
 
 class NNLearner(object):
     def __init__(self, learning_rate = .001,\
-                       num_iterations = 100,\
+                       num_iterations = 500,\
                        num_neurons = [],\
                        batch_size = 32,\
                        verbose = True):
@@ -35,7 +35,7 @@ class NNLearner(object):
         return dLdW, dLdb
     
     def sigmoid(self, z):
-        z = np.random.random(z.shape)
+#        z = np.random.random(z.shape)
         return 1.0/(1.0 + np.exp(-z))
 
     def sigmoid_derivative(self,z):
@@ -44,11 +44,11 @@ class NNLearner(object):
     
     def display_params(self, weights, bias):
         pass
-#        for W,b in zip(weights, bias):
-#            for Wrow in W[:]:
-#                print Wrow
-#            for brow in b[:]:
-#                print brow
+        for W,b in zip(weights, bias):
+            for Wrow in W[:]:
+                print(Wrow)
+            for brow in b[:]:
+                print(brow)
             
         
     def addEvidence(self, dataX, dataY):
@@ -78,7 +78,7 @@ class NNLearner(object):
         for t in range(self.num_iterations + 1):
             
             #forward pass
-            batch_samples = np.random.randint(0,num_examples - 1, self.batch_size)
+            batch_samples = np.random.randint(0, num_examples - 1, self.batch_size)
             A = [dataX[:, batch_samples]]
             Y = dataY[batch_samples]
             #A = [dataX]
@@ -87,7 +87,6 @@ class NNLearner(object):
                 z = np.dot(W[i], A[i]) + b[i]
                 a = self.sigmoid(z)
                 A.append(a)
-            
             #backprop
             dCdW = []
             dCdb = []
@@ -119,30 +118,29 @@ class NNLearner(object):
             
         a[a > 0.5] = 1
         a[a <= 0.5] = 0
-        return a.T
+        return a.T[:,0]
 
 if __name__=="__main__":
     seed = np.random.seed(56)
-    n_samples = 500
+    n_samples = 6
     n_features = 2
     centers = 2
-    cluster_std = 3.5
+    cluster_std = 1.0
     data = make_blobs(n_samples, n_features, centers, cluster_std)
     plt.figure(1)
     plt.scatter(data[0][:,0], data[0][:,1], c=data[1])
     
-    X_train, X_test, y_train, y_test = train_test_split(data[0], data[1], test_size=0.33)
+    X_train, X_test, y_train, y_test = train_test_split(data[0], data[1], test_size=0.2)
     plt.figure(2)
     plt.scatter(X_train[:,0], X_train[:,1], c=y_train)
     
     
     learning_rate = .001
-    num_iterations = 10000
-    num_neurons = [6,6]
+    num_iterations = 500
+#    num_neurons = [6,6]
     num_neurons = []
-    batch_size = 20
+    batch_size = 32
     
-    st = time.time()
     nnl = NNLearner(learning_rate = learning_rate, 
                      num_iterations = num_iterations, 
                      num_neurons = num_neurons, 
@@ -150,8 +148,8 @@ if __name__=="__main__":
                      verbose = True)
     
     nnl.addEvidence(X_train, y_train)
-    print("training took: {} ms".format(time.time() - st))
-    prediction = nnl.query(X_train)
+    predictions = nnl.query(X_train)
+    print("accuracy = {}".format(sum(predictions == y_train)/y_train.shape[0]))
 #    for i in range(prediction.shape[0]):
 #        print(prediction[i,:], y_train[i])
         
