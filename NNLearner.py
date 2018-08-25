@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-import time
 
 class NNLearner(object):
     def __init__(self, learning_rate = .001,\
@@ -103,7 +102,7 @@ class NNLearner(object):
                 W[i] = W[i] - self.learning_rate * dCdW[i]
                 b[i] = b[i] - self.learning_rate * dCdb[i]   
             
-            if t % 100 == 0:
+            if t % 1000 == 0:
                 print("cost at time {}, is {}, learning_rate is {}"
                       .format(t, self.calculate_cost(A[len(A)-1], Y), self.learning_rate))
         self.W = W
@@ -122,10 +121,10 @@ class NNLearner(object):
 
 if __name__=="__main__":
     seed = np.random.seed(56)
-    n_samples = 6
+    n_samples = 1000
     n_features = 2
     centers = 2
-    cluster_std = 1.0
+    cluster_std = 3.0
     data = make_blobs(n_samples, n_features, centers, cluster_std)
     plt.figure(1)
     plt.scatter(data[0][:,0], data[0][:,1], c=data[1])
@@ -136,9 +135,9 @@ if __name__=="__main__":
     
     
     learning_rate = .001
-    num_iterations = 500
-#    num_neurons = [6,6]
-    num_neurons = []
+    num_iterations = 50000
+    num_neurons = [3]
+#    num_neurons = []
     batch_size = 32
     
     nnl = NNLearner(learning_rate = learning_rate, 
@@ -150,100 +149,4 @@ if __name__=="__main__":
     nnl.addEvidence(X_train, y_train)
     predictions = nnl.query(X_train)
     print("accuracy = {}".format(sum(predictions == y_train)/y_train.shape[0]))
-#    for i in range(prediction.shape[0]):
-#        print(prediction[i,:], y_train[i])
-        
-#    train_X = np.array([[-3,-1,2,3,0,0,1,1,-4,3,-2,-1,2,0],
-#                        [0,1,2,3,1,1,4,4,2,4,3,3,4,0]]).T
-#    train_Y = np.array([[0,0,0,0,0,0,0,1,1,1,1,1,1,1]]).T
-                      
-#    train_X = np.array([[ 38.47, 38.2,  37.33, 37.71, 36.21, 36.72, 37.7, 37.27]]).T
-#    train_Y = np.array([[ 0.,  0.,  1.,  0.,  1.,  1.,  0.,  1.]]).T      
-
-#    train_X = np.array([[ 0 , 20, 30, 40, 50 ]]).T
-#    train_Y = np.array([[ 0.,  0., 1., 1., 1.]]).T      
-                      
-#    train_X = np.array([[ 39 , 39, 41, 41, 41 ]]).T
-#    train_X = (train_X - np.min(train_X))/(np.max(train_X) - np.min(train_X))
-#    train_Y = np.array([[ 0.,  0., 1., 1., 1.]]).T   
-
-#    train_X = np.array([[ 38.47, 38.2,  37.33, 37.71, 36.21, 36.72, 37.7, 37.27]]).T
-#    train_X = (train_X - np.min(train_X))/(np.max(train_X) - np.min(train_X))
-#    train_Y = np.array([[ 0.,  0.,  1.,  0.,  1.,  1.,  0.,  1.]]).T    
-#                      
-#    train_X = np.array([[ 38.47],
-#     [ 38.2 ],
-#     [ 37.33],
-#     [ 37.71],
-#     [ 36.21],
-#     [ 36.72],
-#     [ 37.7 ],
-#     [ 37.27],
-#     [ 37.73],
-#     [ 35.73],
-#     [ 37.79],
-#     [ 36.52],
-#     [ 36.11],
-#     [ 37.27],
-#     [ 41.7 ],
-#     [ 41.01],
-#     [ 39.81],
-#     [ 41.57],
-#     [ 43.28],
-#     [ 43.19],
-#     [ 43.24],
-#     [ 44.01],
-#     [ 42.16],
-#     [ 40.03],
-#     [ 39.88],
-#     [ 41.15],
-#     [ 39.97],
-#     [ 39.54],
-#     [ 39.51],
-#     [ 40.23],
-#     [ 38.87],
-#     [ 39.45],
-#     [ 39.07],
-#     [ 39.36],
-#     [ 39.29],
-#     [ 40.07],
-#     [ 40.16],
-#     [ 39.88],
-#     [ 40.51]])
-#    #train_X = (train_X - np.min(train_X))/(np.max(train_X) - np.min(train_X))
-#    train_Y = np.array([[ 0.,  0.,  1.,  0.,  1.,  1.,  0.,  1.,  0.,  1.,  0.,  0.,  1.,  1.,  0.,  0.,  1.,  1.,
-#      0.,  1.,  1.,  0.,  0.,  0.,  1.,  0.,  0.,  0.,  1.,  0.,  1.,  0.,  1.,  0.,  1.,  1.,
-#      0.,  1.,  0.]]).T
-#    
-##   alpha = .001, epochs = 2000000, [3,3] layers
-#    train_X = train_X[:20]
-#    train_Y = train_Y[:20]
-#
-##    train_X = train_X[:5]
-##    train_Y = train_Y[:5]
-#
-#    train_X = (train_X - np.min(train_X))/(np.max(train_X) - np.min(train_X))
-#    for i in np.concatenate((train_X, train_Y), axis=1)[:]:
-#        print 
-#    
-#    learning_rate = .0005
-#    num_iterations = 2000000
-#    num_neurons = [6,6]
-#    batch_size = 20
-#    
-#    st = time.time()
-#    nnl = NNLearner(learning_rate = learning_rate, 
-#                     num_iterations = num_iterations, 
-#                     num_neurons = num_neurons, 
-#                     batch_size = batch_size, 
-#                     verbose = True)
-#    
-#    nnl.addEvidence(train_X, train_Y)
-#    print("training took: {} ms".format(time.time() - st))
-#    prediction = dnnl.query(train_X)
-#    print train_X
-#    for i in range(prediction.shape[0]):
-#        print prediction[i,:], train_Y[i,:]
-#    
-#    
     
