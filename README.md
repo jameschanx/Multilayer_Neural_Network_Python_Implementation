@@ -1,2 +1,11 @@
-# Multilayer_Neural_Network_in_Python
-A python implementation of neural network for supervised learning with multiple layers supported.
+# Multilayer Neural Network Python Implementation
+A simple implementation of neural network written from scratch in Python.
+
+Currently Supported:
+- Multi-layer construction
+- Activation: Sigmoid
+- Backprop: GD and SGD
+
+Currently Not Supported:
+- Dropout
+- L1 and L2 Regularization
